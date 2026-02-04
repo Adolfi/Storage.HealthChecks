@@ -149,13 +149,16 @@ public class MissingMediaFilesHealthCheck : HealthCheck
 
         sb.Append($"<strong style=\"color: #d32f2f;\">⚠️ Found {missingFiles.Count} media item{(missingFiles.Count == 1 ? "" : "s")} with missing files!</strong><br/><br/>");
 
-        sb.Append("<strong>Why does this happen?</strong><br/><ul>");
+        sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
+        sb.Append("<strong>Why does this happen?</strong><br/>");
+        sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
         sb.Append("<li>Server migration where media files were not copied</li>");
         sb.Append("<li>Disk failure or file system corruption</li>");
         sb.Append("<li>Manual deletion of files via FTP/file manager</li>");
         sb.Append("<li>Failed deployment missing media files</li>");
         sb.Append("<li>Cloud storage sync issues (Azure Blob, AWS S3)</li>");
-        sb.Append("</ul><br/>");
+        sb.Append("</ul>");
+        sb.Append("</div>");
 
         sb.Append("<strong>Missing files:</strong><br/><ul>");
 

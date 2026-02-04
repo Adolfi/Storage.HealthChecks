@@ -258,13 +258,15 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
         sb.Append($"Found <strong>{orphanedFiles.Count}</strong> orphaned file{(orphanedFiles.Count == 1 ? "" : "s")} ");
         sb.Append($"(<strong>{totalSizeMB} MB</strong> total).<br/><br/>");
 
+        sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
         sb.Append("<strong>Why does this happen?</strong><br/>");
-        sb.Append("<ul>");
+        sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
         sb.Append("<li>Media deleted but file removal failed (permissions/disk error)</li>");
         sb.Append("<li>Database restored without matching media files</li>");
         sb.Append("<li>Direct FTP uploads bypassing Umbraco</li>");
         sb.Append("<li>Failed or interrupted media operations</li>");
-        sb.Append("</ul><br/>");
+        sb.Append("</ul>");
+        sb.Append("</div>");
 
         sb.Append("<strong>Orphaned files:</strong><br/>");
         sb.Append("<ul>");

@@ -182,13 +182,15 @@ public class UnusedMediaHealthCheck : HealthCheck
         sb.Append($"Found <strong>{unusedItems.Count}</strong> unused media item{(unusedItems.Count == 1 ? "" : "s")} ");
         sb.Append($"(<strong>{totalMB} MB</strong> could be freed).<br/><br/>");
 
+        sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
         sb.Append("<strong>Why are these considered unused?</strong><br/>");
-        sb.Append("<ul>");
+        sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
         sb.Append("<li>No tracked references from any Umbraco content</li>");
         sb.Append("<li>Not used in any document properties that Umbraco tracks</li>");
         sb.Append("<li>May still be used via hardcoded URLs in templates</li>");
         sb.Append("<li>May be referenced by external systems or CSS/JS files</li>");
-        sb.Append("</ul><br/>");
+        sb.Append("</ul>");
+        sb.Append("</div>");
 
         sb.Append("<strong>Unused media items:</strong><br/>");
         sb.Append("<ul>");
