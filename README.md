@@ -41,11 +41,11 @@ Identifies duplicate media files based on filename and file size. Helps you find
 ---
 
 ### Large Media Items
-Finds media files that exceed 5 MB in size. Large files can slow down page load times and consume excessive storage.
+Finds media files that exceed a configurable size threshold (default: 5 MB). Large files can slow down page load times and consume excessive storage.
 
 **Status:** Info  
 **What it checks:**
-- Scans all media items for files larger than 5 MB
+- Scans all media items for files larger than the configured threshold
 - Reports total excess storage used
 - Lists files sorted by size (largest first)
 
@@ -96,22 +96,16 @@ Identifies media items that have no tracked references from any Umbraco content.
 
 ### Ignore Lists
 
-You can configure ignore lists for the **Unused Media** and **Large Media** health checks. Add the following to your `appsettings.json`:
+You can configure an ignore list for the **Unused Media** and **Large Media** health checks by specifying media item GUIDs. Add the following to your `appsettings.json`:
 
 ```json
 {
-  "StorageHealthCheck": {
+  "StorageHealthChecks": {
     "IgnoredMediaIds": [
-      "00000000-0000-0000-0000-000000000000"
+      "00000000-0000-0000-0000-000000000000",
+      "11111111-1111-1111-1111-111111111111"
     ],
-    "IgnoredMediaPaths": [
-      "/media/logos/",
-      "/media/system/"
-    ],
-    "IgnoredFileNames": [
-      "logo.png",
-      "favicon.ico"
-    ]
+    "LargeMediaThresholdMB": 5.0
   }
 }
 ```
@@ -120,9 +114,8 @@ You can configure ignore lists for the **Unused Media** and **Large Media** heal
 
 | Option | Type | Description |
 |--------|------|-------------|
-| `IgnoredMediaIds` | `string[]` | Array of media item GUIDs to ignore |
-| `IgnoredMediaPaths` | `string[]` | Array of path prefixes to ignore (e.g., `/media/logos/`) |
-| `IgnoredFileNames` | `string[]` | Array of filenames to ignore (e.g., `logo.png`) |
+| `IgnoredMediaIds` | `Guid[]` | Array of media item GUIDs to ignore |
+| `LargeMediaThresholdMB` | `double` | Maximum file size in MB before considered "large" (default: 5.0) |
 
 ## Localization
 
