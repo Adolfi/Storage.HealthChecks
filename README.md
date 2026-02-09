@@ -2,7 +2,7 @@
 
 A collection of health checks for Umbraco CMS that help you monitor and maintain your media storage. These checks identify potential issues with media files, helping you keep your Umbraco installation clean and efficient.
 
-![Health Checks Overview](Demo/overview-healthchecks.png)
+![Health Checks Overview](Storage.HealthChecks/Demo/overview-healthchecks.png)
 
 ## Requirements
 
@@ -36,7 +36,7 @@ Identifies duplicate media files based on filename and file size. Helps you find
 - Identifies groups with more than one file
 - Calculates wasted storage space from duplicates
 
-![Duplicate Media Items](Demo/duplicate.png)
+![Duplicate Media Items](Storage.HealthChecks/Demo/duplicate.png)
 
 ---
 
@@ -49,7 +49,7 @@ Finds media files that exceed 5 MB in size. Large files can slow down page load 
 - Reports total excess storage used
 - Lists files sorted by size (largest first)
 
-![Large Media Items](Demo/large.png)
+![Large Media Items](Storage.HealthChecks/Demo/large.png)
 
 ---
 
@@ -62,7 +62,7 @@ Detects media items in the database that are missing their physical files on dis
 - Identifies media items where the file no longer exists
 - Common causes: failed migrations, disk issues, manual file deletion
 
-![Missing Media Files](Demo/missing.png)
+![Missing Media Files](Storage.HealthChecks/Demo/missing.png)
 
 ---
 
@@ -75,7 +75,7 @@ Finds physical files in the `/media` folder that have no corresponding database 
 - Compares with database entries
 - Identifies files that can be safely removed
 
-![Orphaned Media Files](Demo/orphaned.png)
+![Orphaned Media Files](Storage.HealthChecks/Demo/orphaned.png)
 
 ---
 
@@ -88,7 +88,7 @@ Identifies media items that have no tracked references from any Umbraco content.
 - Finds media not used in any content properties
 - Note: May still be used via hardcoded URLs in templates
 
-![Unused Media Items](Demo/unused.png)
+![Unused Media Items](Storage.HealthChecks/Demo/unused.png)
 
 ---
 
