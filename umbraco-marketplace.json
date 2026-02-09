@@ -1,0 +1,39 @@
+{
+  "$schema": "https://marketplace.umbraco.com/umbraco-marketplace-schema.json",
+  "Title": "Storage.HealthChecks",
+  "Category": "Developer Tools",
+  "Description": "Health checks for monitoring and maintaining Umbraco media storage. Identifies duplicate files, large media, missing files, orphaned files and unused media items.",
+  "DocumentationUrl": "https://github.com/Adolfi/Storage.HealthChecks",
+  "IssueTrackerUrl": "https://github.com/Adolfi/Storage.HealthChecks/issues",
+  "LicenseTypes": ["Free"],
+  "AuthorDetails": {
+    "Name": "Adolfi"
+  },
+  "Screenshots": [
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/Adolfi/Storage.HealthChecks/main/Storage.HealthChecks/Demo/overview-healthchecks.png",
+      "Caption": "Health Checks Overview"
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/Adolfi/Storage.HealthChecks/main/Storage.HealthChecks/Demo/duplicate.png",
+      "Caption": "Duplicate Media Detection"
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/Adolfi/Storage.HealthChecks/main/Storage.HealthChecks/Demo/large.png",
+      "Caption": "Large Media Detection"
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/Adolfi/Storage.HealthChecks/main/Storage.HealthChecks/Demo/missing.png",
+      "Caption": "Missing Media Detection"
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/Adolfi/Storage.HealthChecks/main/Storage.HealthChecks/Demo/orphaned.png",
+      "Caption": "Orphaned Media Detection"
+    },
+    {
+      "ImageUrl": "https://raw.githubusercontent.com/Adolfi/Storage.HealthChecks/main/Storage.HealthChecks/Demo/unused.png",
+      "Caption": "Unused Media Detection"
+    }
+  ],
+  "Tags": ["healthcheck", "media", "storage", "maintenance", "cleanup"]
+}
