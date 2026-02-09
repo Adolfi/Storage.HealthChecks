@@ -2,8 +2,6 @@
 
 A collection of health checks for Umbraco CMS that help you monitor and maintain your media storage. These checks identify potential issues with media files, helping you keep your Umbraco installation clean and efficient.
 
-![Health Checks Overview](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/overview-healthchecks.png?raw=true)
-
 ## Requirements
 
 - Umbraco CMS 17.0 or later
@@ -32,7 +30,7 @@ Identifies duplicate media files based on filename and file size. Helps you find
 - Identifies groups with more than one file
 - Calculates wasted storage space from duplicates
 
-![Duplicate Media Items](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/duplicate.png?raw=true)
+[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/duplicate.png?raw=true)
 
 ---
 
@@ -45,7 +43,7 @@ Finds media files that exceed a configurable size threshold (default: 5 MB). Lar
 - Reports total excess storage used
 - Lists files sorted by size (largest first)
 
-![Large Media Items](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/large.png?raw=true)
+[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/large.png?raw=true)
 
 ---
 
@@ -58,7 +56,7 @@ Detects media items in the database that are missing their physical files on dis
 - Identifies media items where the file no longer exists
 - Common causes: failed migrations, disk issues, manual file deletion
 
-![Missing Media Files](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/missing.png?raw=true)
+[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/missing.png?raw=true)
 
 ---
 
@@ -71,7 +69,7 @@ Finds physical files in the `/media` folder that have no corresponding database 
 - Compares with database entries
 - Identifies files that can be safely removed
 
-![Orphaned Media Files](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/orphaned.png?raw=true)
+[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/orphaned.png?raw=true)
 
 ---
 
@@ -84,7 +82,7 @@ Identifies media items that have no tracked references from any Umbraco content.
 - Finds media not used in any content properties
 - Note: May still be used via hardcoded URLs in templates
 
-![Unused Media Items](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/unused.png?raw=true)
+[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/unused.png?raw=true)
 
 ---
 
