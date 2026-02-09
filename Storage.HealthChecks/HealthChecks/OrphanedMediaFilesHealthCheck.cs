@@ -77,7 +77,7 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
             return new HealthCheckStatus(message)
             {
                 ResultType = StatusResultType.Warning,
-                ReadMoreLink = "https://google.com"
+                ReadMoreLink = "https://github.com/Adolfi/Storage.HealthChecks#orphaned-media-files"
             };
         }
         catch (Exception ex)
@@ -263,7 +263,7 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
         sb.Append("<li>Media deleted but file removal failed (permissions/disk error)</li>");
         sb.Append("<li>Database restored without matching media files</li>");
-        sb.Append("<li>Direct FTP uploads bypassing Umbraco</li>");
+        sb.Append("<li>Direct uploads bypassing Umbraco</li>");
         sb.Append("<li>Failed or interrupted media operations</li>");
         sb.Append("</ul>");
         sb.Append("</div>");
@@ -286,7 +286,7 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
             sb.Append($"<em>...and {orphanedFiles.Count - 15} more orphaned files</em><br/><br/>");
         }
 
-        sb.Append("<br/><em>Review these files and remove them via FTP or file manager if they are no longer needed.</em>");
+        sb.Append("<br/><em>Review these files and remove them if they are no longer needed.</em>");
 
         return sb.ToString();
     }

@@ -55,8 +55,7 @@ public class UnusedMediaHealthCheck : HealthCheck
             return new HealthCheckStatus(
                 "Unable to check unused media: ITrackedReferencesService is not available.")
             {
-                ResultType = StatusResultType.Warning,
-                ReadMoreLink = "https://google.com"
+                ResultType = StatusResultType.Error
             };
         }
 
@@ -96,7 +95,7 @@ public class UnusedMediaHealthCheck : HealthCheck
             return new HealthCheckStatus(BuildResultMessage(unusedMediaItems))
             {
                 ResultType = StatusResultType.Warning,
-                ReadMoreLink = "https://google.com"
+                ReadMoreLink = "https://github.com/Adolfi/Storage.HealthChecks#unused-media-items"
             };
         }
         catch (Exception ex)
@@ -127,10 +126,7 @@ public class UnusedMediaHealthCheck : HealthCheck
                 if (media.ContentType.Alias.Equals("Folder", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                var filePath = GetMediaFilePath(media);
-                var fileName = Path.GetFileName(filePath);
-
-                if (_settings.ShouldIgnore(media.Key, filePath, fileName))
+                if (_settings.ShouldIgnore(media.Key))
                     continue;
 
                 allMediaInfo.Add(new UnusedMediaInfo
@@ -200,7 +196,7 @@ public class UnusedMediaHealthCheck : HealthCheck
         foreach (var item in itemsToShow)
         {
             var link = $"/umbraco/section/media/workspace/media/edit/{item.Key}";
-            sb.Append($"<li>{item.Name} ({item.SizeMB} MB) <a href=\"{link}\" target=\"_blank\">»</a></li>");
+            sb.Append($"<li><a href=\"{link}\" target=\"_blank\">{item.Name}</a> ({item.SizeMB} MB)</li>");
         }
 
         sb.Append("</ul>");

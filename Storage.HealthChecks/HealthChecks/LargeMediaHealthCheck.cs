@@ -12,17 +12,17 @@ namespace Storage.HealthChecks.HealthChecks;
 [HealthCheck(
     "F6A7B8C9-0D1E-2F3A-4B5C-6D7E8F9A0B1C",
     "Large media items",
-    Description = "Checks for media items exceeding 5 MB in file size.",
+    Description = "Checks for media items exceeding large file size threshold.",
     Group = "Media Storage")]
 public class LargeMediaHealthCheck : HealthCheck
 {
     private const int PageSize = 500;
-    private const long MaxFileSizeBytes = 5 * 1024 * 1024;
-    private const double MaxFileSizeMB = 5.0;
 
     private readonly IMediaService _mediaService;
     private readonly ILogger<LargeMediaHealthCheck> _logger;
     private readonly StorageHealthCheckConfiguration _settings;
+    private readonly long _maxFileSizeBytes;
+    private readonly double _maxFileSizeMB;
 
     public LargeMediaHealthCheck(
         IMediaService mediaService,
@@ -32,6 +32,8 @@ public class LargeMediaHealthCheck : HealthCheck
         _mediaService = mediaService;
         _logger = logger;
         _settings = settings.Value;
+        _maxFileSizeMB = _settings.LargeMediaThresholdMB > 0 ? _settings.LargeMediaThresholdMB : 5.0;
+        _maxFileSizeBytes = (long)(_maxFileSizeMB * 1024 * 1024);
     }
 
     public override Task<IEnumerable<HealthCheckStatus>> GetStatusAsync()
@@ -56,17 +58,17 @@ public class LargeMediaHealthCheck : HealthCheck
 
             if (largeMedia.Count == 0)
             {
-                return new HealthCheckStatus($"No media files exceeding {MaxFileSizeMB} MB found.")
+                return new HealthCheckStatus($"No media files exceeding {_maxFileSizeMB} MB found.")
                 {
                     ResultType = StatusResultType.Success
                 };
             }
 
-            var totalExcess = largeMedia.Sum(i => i.SizeBytes - MaxFileSizeBytes);
+            var totalExcess = largeMedia.Sum(i => i.SizeBytes - _maxFileSizeBytes);
             return new HealthCheckStatus(BuildResultMessage(largeMedia, totalExcess))
             {
                 ResultType = StatusResultType.Info,
-                ReadMoreLink = "https://google.com"
+                ReadMoreLink = "https://github.com/Adolfi/Storage.HealthChecks#large-media-items"
             };
         }
         catch (Exception ex)
@@ -97,14 +99,13 @@ public class LargeMediaHealthCheck : HealthCheck
                 if (media.ContentType.Alias.Equals("Folder", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                var fileName = GetFileName(media);
-                var fileSize = GetMediaFileSize(media);
-                var filePath = GetFilePath(media);
-
-                if (_settings.ShouldIgnore(media.Key, filePath, fileName))
+                if (_settings.ShouldIgnore(media.Key))
                     continue;
 
-                if (fileSize > MaxFileSizeBytes)
+                var fileName = GetFileName(media);
+                var fileSize = GetMediaFileSize(media);
+
+                if (fileSize > _maxFileSizeBytes)
                 {
                     largeMedia.Add(new LargeMediaInfo
                     {
@@ -155,7 +156,7 @@ public class LargeMediaHealthCheck : HealthCheck
         var totalExcessMB = Math.Round(totalExcessBytes / 1024.0 / 1024.0, 2);
 
         sb.Append($"Found <strong>{largeMedia.Count}</strong> file{(largeMedia.Count == 1 ? "" : "s")} ");
-        sb.Append($"exceeding {MaxFileSizeMB} MB ({totalExcessMB} MB total excess).<br/><br/><ul>");
+        sb.Append($"exceeding {_maxFileSizeMB} MB ({totalExcessMB} MB total excess).<br/><br/><ul>");
 
         foreach (var file in largeMedia.Take(20))
         {
@@ -168,7 +169,7 @@ public class LargeMediaHealthCheck : HealthCheck
         if (largeMedia.Count > 20)
             sb.Append($"<em>...and {largeMedia.Count - 20} more</em><br/>");
 
-        sb.Append("<br/><em>Files exceeding 5 MB should be optimized or compressed.</em>");
+        sb.Append($"<br/><em>Files exceeding {_maxFileSizeMB} MB should be optimized or compressed.</em>");
         return sb.ToString();
     }
 

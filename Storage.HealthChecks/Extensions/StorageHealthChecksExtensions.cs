@@ -4,9 +4,6 @@ using Umbraco.Cms.Core.DependencyInjection;
 
 namespace Storage.HealthChecks.Extensions;
 
-/// <summary>
-/// Extension methods for registering Storage Health Checks configuration.
-/// </summary>
 public static class StorageHealthChecksExtensions
 {
     /// <summary>

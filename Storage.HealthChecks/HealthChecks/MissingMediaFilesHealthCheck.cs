@@ -62,7 +62,7 @@ public class MissingMediaFilesHealthCheck : HealthCheck
             return new HealthCheckStatus(BuildResultMessage(missingFiles))
             {
                 ResultType = StatusResultType.Error,
-                ReadMoreLink = "https://google.com"
+                ReadMoreLink = "https://github.com/Adolfi/Storage.HealthChecks#missing-media-files"
             };
         }
         catch (Exception ex)
@@ -154,7 +154,7 @@ public class MissingMediaFilesHealthCheck : HealthCheck
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
         sb.Append("<li>Server migration where media files were not copied</li>");
         sb.Append("<li>Disk failure or file system corruption</li>");
-        sb.Append("<li>Manual deletion of files via FTP/file manager</li>");
+        sb.Append("<li>Manual deletion of files via file manager</li>");
         sb.Append("<li>Failed deployment missing media files</li>");
         sb.Append("<li>Cloud storage sync issues (Azure Blob, AWS S3)</li>");
         sb.Append("</ul>");

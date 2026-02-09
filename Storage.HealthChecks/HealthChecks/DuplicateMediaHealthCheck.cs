@@ -62,7 +62,7 @@ public class DuplicateMediaHealthCheck : HealthCheck
             return new HealthCheckStatus(BuildResultMessage(duplicateGroups, totalDuplicates, wastedBytes))
             {
                 ResultType = StatusResultType.Info,
-                ReadMoreLink = "https://google.com"
+                ReadMoreLink = "https://github.com/Adolfi/Storage.HealthChecks#duplicate-media-items"
             };
         }
         catch (Exception ex)
