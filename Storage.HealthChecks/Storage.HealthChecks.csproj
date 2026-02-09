@@ -4,11 +4,32 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <!-- NuGet Package Metadata -->
+    <PackageId>Storage.HealthChecks</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Adolfi</Authors>
+    <Company>Adolfi</Company>
+    <Description>A collection of health checks for Umbraco CMS that help you monitor and maintain your media storage. Identifies duplicate files, large media, missing files, orphaned files, and unused media items.</Description>
+    <PackageTags>umbraco;healthcheck;media;storage;cms</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/Adolfi/Storage.HealthChecks</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Adolfi/Storage.HealthChecks</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    
+    <!-- Generera NuGet-paket vid build -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Umbraco.Cms.Core" Version="17.1.0" />
     <PackageReference Include="Umbraco.Cms.Infrastructure" Version="17.1.0" />
+  </ItemGroup>
+
+  <!-- Inkludera README och ikon i paketet -->
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
 </Project>

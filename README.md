@@ -11,19 +11,15 @@ A collection of health checks for Umbraco CMS that help you monitor and maintain
 
 ## Installation
 
-1. Add a reference to the `Storage.HealthChecks` project in your Umbraco web project.
+Install the NuGet package:
 
-2. Register the health checks in your `Program.cs`:
-
-```csharp
-builder.CreateUmbracoBuilder()
-    .AddBackOffice()
-    .AddWebsite()
-    .AddStorageHealthChecks() // Add this line
-    .Build();
+```bash
+dotnet add package Storage.HealthChecks
 ```
 
-3. The health checks will appear in the Umbraco backoffice under **Settings → Health Check → Media Storage**.
+That's it! The health checks will automatically appear in the Umbraco backoffice under **Settings → Health Check → Media Storage**.
+
+> **Note:** The package uses an Umbraco Composer to auto-register the configuration. No code changes are required in your `Program.cs`.
 
 ## Health Checks
 

@@ -1,4 +1,6 @@
 SustainableHealthChecks.sln
 *.Web
+*.Umbraco
 obj
 bin
+package-plan.md
