@@ -96,7 +96,7 @@ Detects physical media files whose extensions are listed in Umbraco's `Disallowe
 - Reports files that bypassed Umbraco's upload validation
 - Common causes: direct FTP/blob uploads, older configs that permitted the extension, custom upload endpoints, migrations
 
-[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/orphaned.png?raw=true)
+[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/disallowed.png?raw=true)
 
 ---
 
