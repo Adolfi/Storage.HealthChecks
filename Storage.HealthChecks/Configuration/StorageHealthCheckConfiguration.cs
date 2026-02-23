@@ -19,6 +19,16 @@ public class StorageHealthCheckConfiguration
     public double LargeMediaThresholdMB { get; set; } = 5.0;
 
     /// <summary>
+    /// Maximum number of files to scan when checking for disallowed extensions. Default is 50,000.
+    /// </summary>
+    public int DisallowedExtensionsScanMaxFiles { get; set; } = 50_000;
+
+    /// <summary>
+    /// Time budget in seconds for scanning disallowed extensions. Default is 5 seconds.
+    /// </summary>
+    public int DisallowedExtensionsScanTimeBudgetSeconds { get; set; } = 5;
+
+    /// <summary>
     /// Checks if a media item should be ignored based on its GUID.
     /// </summary>
     public bool ShouldIgnore(Guid mediaKey)
