@@ -143,8 +143,8 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
                 var fileName = Path.GetFileName(filePath);
                 if (fileName.StartsWith(".") ||
-                    fileName.Equals("Thumbs.db", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.Equals("desktop.ini", StringComparison.OrdinalIgnoreCase))
+                    fileName == "Thumbs.db" ||
+                    fileName == "desktop.ini")
                     continue;
 
                 if (DisallowedExtensionEvaluator.IsDisallowed(filePath, _disallowedExtensions))
