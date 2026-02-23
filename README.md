@@ -86,6 +86,20 @@ Identifies media items that have no tracked references from any Umbraco content.
 
 ---
 
+### Disallowed Media File Extensions
+Detects physical media files whose extensions are listed in Umbraco's `DisallowedUploadedFileExtensions` setting. These files may pose a security risk and should be reviewed.
+
+**Status:** Warning  
+**What it checks:**
+- Scans all physical files in the configured media storage
+- Compares each file's extension against `ContentSettings.DisallowedUploadedFileExtensions`
+- Reports files that bypassed Umbraco's upload validation
+- Common causes: direct FTP/blob uploads, older configs that permitted the extension, custom upload endpoints, migrations
+
+[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/orphaned.png?raw=true)
+
+---
+
 ## Configuration
 
 ### Ignore Lists
@@ -110,6 +124,8 @@ You can configure an ignore list for the **Unused Media** and **Large Media** he
 |--------|------|-------------|
 | `IgnoredMediaIds` | `Guid[]` | Array of media item GUIDs to ignore |
 | `LargeMediaThresholdMB` | `double` | Maximum file size in MB before considered "large" (default: 5.0) |
+| `DisallowedExtensionsScanMaxFiles` | `int` | Maximum number of files to scan for disallowed extensions before aborting (default: 50,000) |
+| `DisallowedExtensionsScanTimeBudgetSeconds` | `int` | Time budget in seconds for the disallowed extensions scan before aborting (default: 5) |
 
 ## Localization
 

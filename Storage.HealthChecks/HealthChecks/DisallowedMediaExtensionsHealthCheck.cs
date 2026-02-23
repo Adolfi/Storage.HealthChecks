@@ -42,7 +42,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
                 ? settings.DisallowedExtensionsScanTimeBudgetSeconds
                 : 5);
 
-        _disallowedExtensions = contentSettings.Value.DisallowedUploadedFileExtensions
+        _disallowedExtensions = (contentSettings.Value.DisallowedUploadedFileExtensions ?? Enumerable.Empty<string>())
             .Select(e => e.TrimStart('.').ToLowerInvariant())
             .Where(e => !string.IsNullOrEmpty(e))
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
@@ -192,8 +192,10 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
         foreach (var filePath in result.ViolatingPaths)
         {
-            var ext = Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant();
-            sb.Append($"<li><code>/media/{filePath}</code> <em>(.{ext})</em></li>");
+            var ext = System.Net.WebUtility.HtmlEncode(
+                Path.GetExtension(filePath).TrimStart('.').ToLowerInvariant());
+            var encodedPath = System.Net.WebUtility.HtmlEncode(filePath);
+            sb.Append($"<li><code>/media/{encodedPath}</code> <em>(.{ext})</em></li>");
         }
 
         sb.Append("</ul>");
