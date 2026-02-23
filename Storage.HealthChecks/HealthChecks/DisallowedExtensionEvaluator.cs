@@ -11,7 +11,9 @@ public static class DisallowedExtensionEvaluator
     /// </summary>
     /// <param name="filePath">The file path to check.</param>
     /// <param name="disallowedExtensions">
-    /// Extensions to check against. Each entry should be lowercase and without a leading dot (e.g. "exe", "php").
+    /// Extensions to check against. The file extension is normalized to lowercase and stripped of any leading dot
+    /// before comparison. Callers should provide entries without a leading dot (e.g. "exe", "php") and either
+    /// normalize them to lowercase before adding them to the collection or use a case-insensitive collection.
     /// </param>
     /// <returns>True if the file's extension is in the disallowed list; otherwise false.</returns>
     public static bool IsDisallowed(string filePath, IEnumerable<string> disallowedExtensions)
