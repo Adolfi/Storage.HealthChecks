@@ -5,6 +5,7 @@ using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.IO;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -20,15 +21,18 @@ public class MissingMediaFilesHealthCheck : HealthCheck
     private readonly IMediaService _mediaService;
     private readonly MediaFileManager _mediaFileManager;
     private readonly ILogger<MissingMediaFilesHealthCheck> _logger;
+    private readonly ILocalizedTextService _localizedTextService;
 
     public MissingMediaFilesHealthCheck(
         IMediaService mediaService,
         MediaFileManager mediaFileManager,
-        ILogger<MissingMediaFilesHealthCheck> logger)
+        ILogger<MissingMediaFilesHealthCheck> logger,
+        ILocalizedTextService localizedTextService)
     {
         _mediaService = mediaService;
         _mediaFileManager = mediaFileManager;
         _logger = logger;
+        _localizedTextService = localizedTextService;
     }
 
     public override Task<IEnumerable<HealthCheckStatus>> GetStatusAsync()
@@ -39,7 +43,7 @@ public class MissingMediaFilesHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus("No actions available. Please re-upload the missing files or remove the media items.")
+        return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "missingMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -53,7 +57,7 @@ public class MissingMediaFilesHealthCheck : HealthCheck
 
             if (missingFiles.Count == 0)
             {
-                return new HealthCheckStatus("All media items have their physical files present.")
+                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "missingMedia.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -68,7 +72,7 @@ public class MissingMediaFilesHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during missing media files health check");
-            return new HealthCheckStatus($"Error: {ex.Message}")
+            return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "missingMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -147,34 +151,36 @@ public class MissingMediaFilesHealthCheck : HealthCheck
     {
         var sb = new StringBuilder();
 
-        sb.Append($"<strong style=\"color: #d32f2f;\">⚠️ Found {missingFiles.Count} media item{(missingFiles.Count == 1 ? "" : "s")} with missing files!</strong><br/><br/>");
+        sb.Append($"<strong style=\"color: #d32f2f;\">⚠️ {_localizedTextService.Localize("storageHealthChecks", "missingMedia.summary", new[] { missingFiles.Count.ToString() })}</strong><br/><br/>");
 
         sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
-        sb.Append("<strong>Why does this happen?</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyHeader")}</strong><br/>");
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
-        sb.Append("<li>Server migration where media files were not copied</li>");
-        sb.Append("<li>Disk failure or file system corruption</li>");
-        sb.Append("<li>Manual deletion of files via file manager</li>");
-        sb.Append("<li>Failed deployment missing media files</li>");
-        sb.Append("<li>Cloud storage sync issues (Azure Blob, AWS S3)</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyMigration")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyDisk")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyManual")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyDeployment")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyCloud")}</li>");
         sb.Append("</ul>");
         sb.Append("</div>");
 
-        sb.Append("<strong>Missing files:</strong><br/><ul>");
+        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.filesHeader")}</strong><br/><ul>");
 
         foreach (var file in missingFiles.Take(15))
         {
             var link = $"/umbraco/section/media/workspace/media/edit/{file.Key}";
+            var itemLabel = _localizedTextService.Localize("storageHealthChecks", "missingMedia.itemLine",
+                new[] { $"<code>{file.ExpectedPath}</code>" });
             sb.Append($"<li><a href=\"{link}\" target=\"_blank\"><strong>{file.Name}</strong></a> ");
-            sb.Append($"<em>(expected: <code>{file.ExpectedPath}</code>)</em></li>");
+            sb.Append($"<em>({itemLabel})</em></li>");
         }
 
         sb.Append("</ul>");
 
         if (missingFiles.Count > 15)
-            sb.Append($"<em>...and {missingFiles.Count - 15} more</em><br/>");
+            sb.Append($"<em>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.moreItems", new[] { (missingFiles.Count - 15).ToString() })}</em><br/>");
 
-        sb.Append("<br/><strong>Action required:</strong> Re-upload the missing files or delete the media items.");
+        sb.Append($"<br/><strong>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.actionRequired")}</strong>");
         return sb.ToString();
     }
 

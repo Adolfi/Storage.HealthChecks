@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="en" intName="English" localName="English" lcid="" culture="en">
+  <area alias="storageHealthChecks">
+
+    <!-- Duplicate Media -->
+    <key alias="duplicateMedia.noActions">No actions available. Please review and remove duplicate files manually.</key>
+    <key alias="duplicateMedia.noIssues">No duplicate media files found.</key>
+    <key alias="duplicateMedia.summary">Found {0} duplicate file(s) in {1} group(s) ({2} MB wasted).</key>
+    <key alias="duplicateMedia.groupHeader">{0} copies, {1} MB wasted</key>
+    <key alias="duplicateMedia.original">(original)</key>
+    <key alias="duplicateMedia.moreItems">...and {0} more</key>
+    <key alias="duplicateMedia.moreGroups">...and {0} more duplicate groups</key>
+    <key alias="duplicateMedia.recommendation">Review duplicates and consider consolidating to save space.</key>
+    <key alias="duplicateMedia.error">Error checking duplicate media: {0}</key>
+
+    <!-- Large Media -->
+    <key alias="largeMedia.noActions">No actions available. Please optimize large files manually.</key>
+    <key alias="largeMedia.noIssues">No media files exceeding {0} MB found.</key>
+    <key alias="largeMedia.summary">Found {0} file(s) exceeding {1} MB ({2} MB total excess).</key>
+    <key alias="largeMedia.moreItems">...and {0} more</key>
+    <key alias="largeMedia.recommendation">Files exceeding {0} MB should be optimized or compressed.</key>
+    <key alias="largeMedia.error">Error checking large media: {0}</key>
+
+    <!-- Missing Media Files -->
+    <key alias="missingMedia.noActions">No actions available. Please re-upload the missing files or remove the media items.</key>
+    <key alias="missingMedia.noIssues">All media items have their physical files present.</key>
+    <key alias="missingMedia.summary">Found {0} media item(s) with missing files!</key>
+    <key alias="missingMedia.whyHeader">Why does this happen?</key>
+    <key alias="missingMedia.whyMigration">Server migration where media files were not copied</key>
+    <key alias="missingMedia.whyDisk">Disk failure or file system corruption</key>
+    <key alias="missingMedia.whyManual">Manual deletion of files via file manager</key>
+    <key alias="missingMedia.whyDeployment">Failed deployment missing media files</key>
+    <key alias="missingMedia.whyCloud">Cloud storage sync issues (Azure Blob, AWS S3)</key>
+    <key alias="missingMedia.filesHeader">Missing files:</key>
+    <key alias="missingMedia.itemLine">expected: {0}</key>
+    <key alias="missingMedia.moreItems">...and {0} more</key>
+    <key alias="missingMedia.actionRequired">Action required: Re-upload the missing files or delete the media items.</key>
+    <key alias="missingMedia.error">Error checking missing media files: {0}</key>
+
+    <!-- Orphaned Media Files -->
+    <key alias="orphanedMedia.noActions">No actions available. Please review and remove orphaned files manually via FTP/file manager.</key>
+    <key alias="orphanedMedia.noIssues">No orphaned media files found. All physical files have database entries.</key>
+    <key alias="orphanedMedia.summary">Found {0} orphaned file(s) ({1} MB total).</key>
+    <key alias="orphanedMedia.whyHeader">Why does this happen?</key>
+    <key alias="orphanedMedia.whyDeleted">Media deleted but file removal failed (permissions/disk error)</key>
+    <key alias="orphanedMedia.whyRestore">Database restored without matching media files</key>
+    <key alias="orphanedMedia.whyDirect">Direct uploads bypassing Umbraco</key>
+    <key alias="orphanedMedia.whyFailed">Failed or interrupted media operations</key>
+    <key alias="orphanedMedia.filesHeader">Orphaned files:</key>
+    <key alias="orphanedMedia.moreItems">...and {0} more orphaned files</key>
+    <key alias="orphanedMedia.recommendation">Review these files and remove them if they are no longer needed.</key>
+    <key alias="orphanedMedia.error">Error checking orphaned media files: {0}</key>
+
+    <!-- Unused Media -->
+    <key alias="unusedMedia.noActions">No actions available for this health check.</key>
+    <key alias="unusedMedia.serviceUnavailable">Unable to check unused media: ITrackedReferencesService is not available.</key>
+    <key alias="unusedMedia.noIssues">All media items have at least one tracked reference.</key>
+    <key alias="unusedMedia.summary">Found {0} unused media item(s) ({1} MB could be freed).</key>
+    <key alias="unusedMedia.whyHeader">Why are these considered unused?</key>
+    <key alias="unusedMedia.whyNoRef">No tracked references from any Umbraco content</key>
+    <key alias="unusedMedia.whyNoDocProp">Not used in any document properties that Umbraco tracks</key>
+    <key alias="unusedMedia.whyHardcoded">May still be used via hardcoded URLs in templates</key>
+    <key alias="unusedMedia.whyExternal">May be referenced by external systems or CSS/JS files</key>
+    <key alias="unusedMedia.itemsHeader">Unused media items:</key>
+    <key alias="unusedMedia.moreItems">...and {0} more unused items</key>
+    <key alias="unusedMedia.recommendation">Review these items and delete them if they are no longer needed.</key>
+    <key alias="unusedMedia.error">Error checking unused media: {0}</key>
+
+    <!-- Disallowed Media Extensions -->
+    <key alias="disallowedExtensions.noActions">No actions available. Please review and remove or replace the disallowed files manually.</key>
+    <key alias="disallowedExtensions.noConfig">No disallowed file extensions are configured in ContentSettings.</key>
+    <key alias="disallowedExtensions.noIssues">No media files with disallowed extensions found.</key>
+    <key alias="disallowedExtensions.summary">Found {0} file(s) with disallowed extensions.</key>
+    <key alias="disallowedExtensions.summaryAborted">Found {0} file(s) with disallowed extensions (scan stopped early: {1}).</key>
+    <key alias="disallowedExtensions.aborted.maxFiles">scan limit of {0} files reached</key>
+    <key alias="disallowedExtensions.aborted.timeBudget">time budget of {0}s exceeded</key>
+    <key alias="disallowedExtensions.whyHeader">Why might disallowed files exist?</key>
+    <key alias="disallowedExtensions.whyOldConfig">An older configuration allowed these extensions before they were restricted</key>
+    <key alias="disallowedExtensions.whyFtp">Files were added directly via FTP, file share, or Azure Blob storage</key>
+    <key alias="disallowedExtensions.whyCustom">Custom upload endpoints bypassed Umbraco validation</key>
+    <key alias="disallowedExtensions.whyMigration">Migrations or deployments copied files into the media folder</key>
+    <key alias="disallowedExtensions.filesHeader">Files with disallowed extensions:</key>
+    <key alias="disallowedExtensions.moreItems">...and {0} more</key>
+    <key alias="disallowedExtensions.recommendation">Review and remove or replace these files to improve security.</key>
+    <key alias="disallowedExtensions.error">Error checking disallowed media extensions: {0}</key>
+
+  </area>
+</language>

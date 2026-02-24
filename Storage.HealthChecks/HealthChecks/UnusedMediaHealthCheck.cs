@@ -6,6 +6,7 @@ using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -22,16 +23,19 @@ public class UnusedMediaHealthCheck : HealthCheck
     private readonly ITrackedReferencesService? _trackedReferencesService;
     private readonly ILogger<UnusedMediaHealthCheck> _logger;
     private readonly StorageHealthCheckConfiguration _settings;
+    private readonly ILocalizedTextService _localizedTextService;
 
     public UnusedMediaHealthCheck(
         IMediaService mediaService,
         ILogger<UnusedMediaHealthCheck> logger,
         IOptions<StorageHealthCheckConfiguration> settings,
+        ILocalizedTextService localizedTextService,
         ITrackedReferencesService? trackedReferencesService = null)
     {
         _mediaService = mediaService;
         _logger = logger;
         _settings = settings.Value;
+        _localizedTextService = localizedTextService;
         _trackedReferencesService = trackedReferencesService;
     }
 
@@ -42,7 +46,7 @@ public class UnusedMediaHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus("No actions available for this health check.")
+        return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "unusedMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -53,7 +57,7 @@ public class UnusedMediaHealthCheck : HealthCheck
         if (_trackedReferencesService is null)
         {
             return new HealthCheckStatus(
-                "Unable to check unused media: ITrackedReferencesService is not available.")
+                _localizedTextService.Localize("storageHealthChecks", "unusedMedia.serviceUnavailable"))
             {
                 ResultType = StatusResultType.Error
             };
@@ -86,7 +90,7 @@ public class UnusedMediaHealthCheck : HealthCheck
 
             if (unusedMediaItems.Count == 0)
             {
-                return new HealthCheckStatus("All media items have at least one tracked reference.")
+                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "unusedMedia.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -101,7 +105,7 @@ public class UnusedMediaHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during unused media health check");
-            return new HealthCheckStatus($"Error: {ex.Message}")
+            return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "unusedMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -175,20 +179,21 @@ public class UnusedMediaHealthCheck : HealthCheck
         var totalBytes = unusedItems.Sum(x => x.SizeBytes);
         var totalMB = Math.Round(totalBytes / 1024.0 / 1024.0, 2);
 
-        sb.Append($"Found <strong>{unusedItems.Count}</strong> unused media item{(unusedItems.Count == 1 ? "" : "s")} ");
-        sb.Append($"(<strong>{totalMB} MB</strong> could be freed).<br/><br/>");
+        sb.Append(_localizedTextService.Localize("storageHealthChecks", "unusedMedia.summary",
+            new[] { unusedItems.Count.ToString(), totalMB.ToString() }));
+        sb.Append("<br/><br/>");
 
         sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
-        sb.Append("<strong>Why are these considered unused?</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyHeader")}</strong><br/>");
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
-        sb.Append("<li>No tracked references from any Umbraco content</li>");
-        sb.Append("<li>Not used in any document properties that Umbraco tracks</li>");
-        sb.Append("<li>May still be used via hardcoded URLs in templates</li>");
-        sb.Append("<li>May be referenced by external systems or CSS/JS files</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyNoRef")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyNoDocProp")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyHardcoded")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyExternal")}</li>");
         sb.Append("</ul>");
         sb.Append("</div>");
 
-        sb.Append("<strong>Unused media items:</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.itemsHeader")}</strong><br/>");
         sb.Append("<ul>");
 
         var itemsToShow = unusedItems.Take(15).ToList();
@@ -203,10 +208,10 @@ public class UnusedMediaHealthCheck : HealthCheck
 
         if (unusedItems.Count > 15)
         {
-            sb.Append($"<em>...and {unusedItems.Count - 15} more unused items</em><br/><br/>");
+            sb.Append($"<em>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.moreItems", new[] { (unusedItems.Count - 15).ToString() })}</em><br/><br/>");
         }
 
-        sb.Append("<br/><em>Review these items and delete them if they are no longer needed.</em>");
+        sb.Append($"<br/><em>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.recommendation")}</em>");
 
         return sb.ToString();
     }

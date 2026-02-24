@@ -32,4 +32,9 @@
     <None Include="..\README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 
+  <!-- Include language files in build output and NuGet package -->
+  <ItemGroup>
+    <Content Include="config/**" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<language alias="sv" intName="Swedish" localName="Svenska" lcid="" culture="sv-SE">
+  <area alias="storageHealthChecks">
+
+    <!-- Duplicate Media -->
+    <key alias="duplicateMedia.noActions">Inga åtgärder tillgängliga. Granska och ta bort dubbletter manuellt.</key>
+    <key alias="duplicateMedia.noIssues">Inga dubbletter av mediafiler hittades.</key>
+    <key alias="duplicateMedia.summary">Hittade {0} dubbelfil(er) i {1} grupp(er) ({2} MB slösat).</key>
+    <key alias="duplicateMedia.groupHeader">{0} kopior, {1} MB slösat</key>
+    <key alias="duplicateMedia.original">(original)</key>
+    <key alias="duplicateMedia.moreItems">...och {0} till</key>
+    <key alias="duplicateMedia.moreGroups">...och {0} fler duplicatgrupper</key>
+    <key alias="duplicateMedia.recommendation">Granska dubbletter och överväg att konsolidera för att spara utrymme.</key>
+    <key alias="duplicateMedia.error">Fel vid kontroll av dubblerade mediafiler: {0}</key>
+
+    <!-- Large Media -->
+    <key alias="largeMedia.noActions">Inga åtgärder tillgängliga. Optimera stora filer manuellt.</key>
+    <key alias="largeMedia.noIssues">Inga mediafiler som överstiger {0} MB hittades.</key>
+    <key alias="largeMedia.summary">Hittade {0} fil(er) som överstiger {1} MB ({2} MB total överskott).</key>
+    <key alias="largeMedia.moreItems">...och {0} till</key>
+    <key alias="largeMedia.recommendation">Filer som överstiger {0} MB bör optimeras eller komprimeras.</key>
+    <key alias="largeMedia.error">Fel vid kontroll av stora mediafiler: {0}</key>
+
+    <!-- Missing Media Files -->
+    <key alias="missingMedia.noActions">Inga åtgärder tillgängliga. Ladda upp de saknade filerna på nytt eller ta bort mediaobjekten.</key>
+    <key alias="missingMedia.noIssues">Alla mediaobjekt har sina fysiska filer på plats.</key>
+    <key alias="missingMedia.summary">Hittade {0} mediaobjekt med saknade filer!</key>
+    <key alias="missingMedia.whyHeader">Varför händer detta?</key>
+    <key alias="missingMedia.whyMigration">Servermigrering där mediefiler inte kopierades</key>
+    <key alias="missingMedia.whyDisk">Diskfel eller filsystemskorruption</key>
+    <key alias="missingMedia.whyManual">Manuell borttagning av filer via filhanteraren</key>
+    <key alias="missingMedia.whyDeployment">Misslyckat driftsättning som saknar mediafiler</key>
+    <key alias="missingMedia.whyCloud">Synkroniseringsproblem med molnlagring (Azure Blob, AWS S3)</key>
+    <key alias="missingMedia.filesHeader">Saknade filer:</key>
+    <key alias="missingMedia.itemLine">förväntat: {0}</key>
+    <key alias="missingMedia.moreItems">...och {0} till</key>
+    <key alias="missingMedia.actionRequired">Åtgärd krävs: Ladda upp de saknade filerna på nytt eller ta bort mediaobjekten.</key>
+    <key alias="missingMedia.error">Fel vid kontroll av saknade mediafiler: {0}</key>
+
+    <!-- Orphaned Media Files -->
+    <key alias="orphanedMedia.noActions">Inga åtgärder tillgängliga. Granska och ta bort överblivna filer manuellt via FTP/filhanterare.</key>
+    <key alias="orphanedMedia.noIssues">Inga överblivna mediafiler hittades. Alla fysiska filer har databasposter.</key>
+    <key alias="orphanedMedia.summary">Hittade {0} överblivna fil(er) ({1} MB totalt).</key>
+    <key alias="orphanedMedia.whyHeader">Varför händer detta?</key>
+    <key alias="orphanedMedia.whyDeleted">Media raderat men filborttagning misslyckades (behörigheter/diskfel)</key>
+    <key alias="orphanedMedia.whyRestore">Databasen återställd utan matchande mediafiler</key>
+    <key alias="orphanedMedia.whyDirect">Direktuppladdningar som kringgår Umbraco</key>
+    <key alias="orphanedMedia.whyFailed">Misslyckade eller avbrutna mediaoperationer</key>
+    <key alias="orphanedMedia.filesHeader">Överblivna filer:</key>
+    <key alias="orphanedMedia.moreItems">...och {0} fler överblivna filer</key>
+    <key alias="orphanedMedia.recommendation">Granska dessa filer och ta bort dem om de inte längre behövs.</key>
+    <key alias="orphanedMedia.error">Fel vid kontroll av överblivna mediafiler: {0}</key>
+
+    <!-- Unused Media -->
+    <key alias="unusedMedia.noActions">Inga åtgärder tillgängliga för denna hälsokontroll.</key>
+    <key alias="unusedMedia.serviceUnavailable">Det går inte att kontrollera oanvända media: ITrackedReferencesService är inte tillgänglig.</key>
+    <key alias="unusedMedia.noIssues">Alla mediaobjekt har minst en spårad referens.</key>
+    <key alias="unusedMedia.summary">Hittade {0} oanvända mediaobjekt ({1} MB kan frigöras).</key>
+    <key alias="unusedMedia.whyHeader">Varför anses dessa vara oanvända?</key>
+    <key alias="unusedMedia.whyNoRef">Inga spårade referenser från något Umbraco-innehåll</key>
+    <key alias="unusedMedia.whyNoDocProp">Används inte i några dokumentegenskaper som Umbraco spårar</key>
+    <key alias="unusedMedia.whyHardcoded">Kan fortfarande användas via hårdkodade URL:er i mallar</key>
+    <key alias="unusedMedia.whyExternal">Kan refereras av externa system eller CSS/JS-filer</key>
+    <key alias="unusedMedia.itemsHeader">Oanvända mediaobjekt:</key>
+    <key alias="unusedMedia.moreItems">...och {0} fler oanvända objekt</key>
+    <key alias="unusedMedia.recommendation">Granska dessa objekt och ta bort dem om de inte längre behövs.</key>
+    <key alias="unusedMedia.error">Fel vid kontroll av oanvända mediaobjekt: {0}</key>
+
+    <!-- Disallowed Media Extensions -->
+    <key alias="disallowedExtensions.noActions">Inga åtgärder tillgängliga. Granska och ta bort eller ersätt de ej tillåtna filerna manuellt.</key>
+    <key alias="disallowedExtensions.noConfig">Inga otillåtna filtillägg är konfigurerade i ContentSettings.</key>
+    <key alias="disallowedExtensions.noIssues">Inga mediafiler med otillåtna tillägg hittades.</key>
+    <key alias="disallowedExtensions.summary">Hittade {0} fil(er) med otillåtna tillägg.</key>
+    <key alias="disallowedExtensions.summaryAborted">Hittade {0} fil(er) med otillåtna tillägg (skanningen avbröts i förtid: {1}).</key>
+    <key alias="disallowedExtensions.aborted.maxFiles">skanningsgräns på {0} filer nådd</key>
+    <key alias="disallowedExtensions.aborted.timeBudget">tidsbudget på {0}s överskriden</key>
+    <key alias="disallowedExtensions.whyHeader">Varför kan otillåtna filer finnas?</key>
+    <key alias="disallowedExtensions.whyOldConfig">En äldre konfiguration tillät dessa tillägg innan de begränsades</key>
+    <key alias="disallowedExtensions.whyFtp">Filer lades till direkt via FTP, fildelning eller Azure Blob-lagring</key>
+    <key alias="disallowedExtensions.whyCustom">Anpassade uppladdningsändpunkter kringgick Umbracos validering</key>
+    <key alias="disallowedExtensions.whyMigration">Migreringar eller driftsättningar kopierade filer till mediamappen</key>
+    <key alias="disallowedExtensions.filesHeader">Filer med otillåtna tillägg:</key>
+    <key alias="disallowedExtensions.moreItems">...och {0} till</key>
+    <key alias="disallowedExtensions.recommendation">Granska och ta bort eller ersätt dessa filer för att förbättra säkerheten.</key>
+    <key alias="disallowedExtensions.error">Fel vid kontroll av otillåtna medietillägg: {0}</key>
+
+  </area>
+</language>

@@ -6,6 +6,8 @@ using System.Text;
 using Umbraco.Cms.Core.Configuration.Models;
 using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.IO;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -20,6 +22,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
     private readonly MediaFileManager _mediaFileManager;
     private readonly ILogger<DisallowedMediaExtensionsHealthCheck> _logger;
+    private readonly ILocalizedTextService _localizedTextService;
     private readonly HashSet<string> _disallowedExtensions;
     private readonly int _maxFilesToScan;
     private readonly TimeSpan _timeBudget;
@@ -28,10 +31,12 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
         MediaFileManager mediaFileManager,
         ILogger<DisallowedMediaExtensionsHealthCheck> logger,
         IOptions<ContentSettings> contentSettings,
-        IOptions<StorageHealthCheckConfiguration> storageSettings)
+        IOptions<StorageHealthCheckConfiguration> storageSettings,
+        ILocalizedTextService localizedTextService)
     {
         _mediaFileManager = mediaFileManager;
         _logger = logger;
+        _localizedTextService = localizedTextService;
 
         var settings = storageSettings.Value;
         _maxFilesToScan = settings.DisallowedExtensionsScanMaxFiles > 0
@@ -56,7 +61,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus("No actions available. Please review and remove or replace the disallowed files manually.")
+        return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -70,7 +75,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
             if (_disallowedExtensions.Count == 0)
             {
-                return new HealthCheckStatus("No disallowed file extensions are configured in ContentSettings.")
+                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.noConfig"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -84,7 +89,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
             if (result.TotalViolations == 0)
             {
-                return new HealthCheckStatus("No media files with disallowed extensions found.")
+                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -99,7 +104,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during disallowed media extensions health check");
-            return new HealthCheckStatus($"Error checking disallowed media extensions: {ex.Message}")
+            return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -128,14 +133,16 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
                 if (result.TotalScanned >= _maxFilesToScan)
                 {
                     result.Aborted = true;
-                    result.AbortReason = $"scan limit of {_maxFilesToScan:N0} files reached";
+                    result.AbortReasonKey = "disallowedExtensions.aborted.maxFiles";
+                    result.AbortReasonTokens = new[] { _maxFilesToScan.ToString("N0") };
                     return;
                 }
 
                 if (stopwatch.Elapsed >= _timeBudget)
                 {
                     result.Aborted = true;
-                    result.AbortReason = $"time budget of {_timeBudget.TotalSeconds}s exceeded";
+                    result.AbortReasonKey = "disallowedExtensions.aborted.timeBudget";
+                    result.AbortReasonTokens = new[] { _timeBudget.TotalSeconds.ToString() };
                     return;
                 }
 
@@ -173,22 +180,31 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
     {
         var sb = new StringBuilder();
 
-        sb.Append($"Found <strong>{result.TotalViolations}</strong> file{(result.TotalViolations == 1 ? "" : "s")} with disallowed extensions");
         if (result.Aborted)
-            sb.Append($" (scan stopped early: {result.AbortReason})");
-        sb.Append(".<br/><br/>");
+        {
+            var abortReason = _localizedTextService.Localize("storageHealthChecks", result.AbortReasonKey, result.AbortReasonTokens);
+            sb.Append(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.summaryAborted",
+                new[] { result.TotalViolations.ToString(), abortReason }));
+        }
+        else
+        {
+            sb.Append(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.summary",
+                new[] { result.TotalViolations.ToString() }));
+        }
+
+        sb.Append("<br/><br/>");
 
         sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
-        sb.Append("<strong>Why might disallowed files exist?</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyHeader")}</strong><br/>");
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
-        sb.Append("<li>An older configuration allowed these extensions before they were restricted</li>");
-        sb.Append("<li>Files were added directly via FTP, file share, or Azure Blob storage</li>");
-        sb.Append("<li>Custom upload endpoints bypassed Umbraco validation</li>");
-        sb.Append("<li>Migrations or deployments copied files into the media folder</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyOldConfig")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyFtp")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyCustom")}</li>");
+        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyMigration")}</li>");
         sb.Append("</ul>");
         sb.Append("</div>");
 
-        sb.Append("<strong>Files with disallowed extensions:</strong><br/><ul>");
+        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.filesHeader")}</strong><br/><ul>");
 
         foreach (var filePath in result.ViolatingPaths)
         {
@@ -201,9 +217,9 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
         sb.Append("</ul>");
 
         if (result.TotalViolations > MaxExamplePaths)
-            sb.Append($"<em>...and {result.TotalViolations - MaxExamplePaths} more</em><br/>");
+            sb.Append($"<em>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.moreItems", new[] { (result.TotalViolations - MaxExamplePaths).ToString() })}</em><br/>");
 
-        sb.Append("<br/><em>Review and remove or replace these files to improve security.</em>");
+        sb.Append($"<br/><em>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.recommendation")}</em>");
 
         return sb.ToString();
     }
@@ -214,6 +230,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
         public int TotalViolations { get; set; }
         public List<string> ViolatingPaths { get; } = new();
         public bool Aborted { get; set; }
-        public string AbortReason { get; set; } = string.Empty;
+        public string AbortReasonKey { get; set; } = string.Empty;
+        public string[] AbortReasonTokens { get; set; } = Array.Empty<string>();
     }
 }
