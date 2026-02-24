@@ -142,7 +142,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
                 {
                     result.Aborted = true;
                     result.AbortReasonKey = "disallowedExtensions.aborted.timeBudget";
-                    result.AbortReasonTokens = new[] { _timeBudget.TotalSeconds.ToString() };
+                    result.AbortReasonTokens = new[] { _timeBudget.TotalSeconds.ToString("F1") };
                     return;
                 }
 
