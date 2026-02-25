@@ -7,7 +7,8 @@
   "IssueTrackerUrl": "https://github.com/Adolfi/Storage.HealthChecks/issues",
   "LicenseTypes": ["Free"],
   "AuthorDetails": {
-    "Name": "Adolfi"
+    "Name": "Adolfi",
+    "ImageUrl": "https://raw.githubusercontent.com/Adolfi/Storage.HealthChecks/main/images/author.png"
   },
   "Screenshots": [
     {

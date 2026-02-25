@@ -17,6 +17,7 @@
     <RepositoryUrl>https://github.com/Adolfi/Storage.HealthChecks</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>images/package-icon.png</PackageIcon>
     
     <!-- Generera NuGet-paket vid build -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -30,6 +31,7 @@
   <!-- Inkludera README och ikon i paketet -->
   <ItemGroup>
     <None Include="..\README.md" Pack="true" PackagePath="" />
+    <None Include="..\images\package-icon.png" Pack="true" PackagePath="images\" />
   </ItemGroup>
 
 </Project>
