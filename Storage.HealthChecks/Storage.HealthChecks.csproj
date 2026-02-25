@@ -17,7 +17,7 @@
     <RepositoryUrl>https://github.com/Adolfi/Storage.HealthChecks</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>images/package.png</PackageIcon>
+    <PackageIcon>https://github.com/Adolfi/Storage.HealthChecks/blob/main/images/package.png?raw=true</PackageIcon>
     
     <!-- Generera NuGet-paket vid build -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
