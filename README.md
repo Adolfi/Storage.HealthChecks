@@ -1,3 +1,5 @@
+![Package Icon](/images/package.png)
+
 # Storage Health Checks for Umbraco
 
 A collection of health checks for Umbraco CMS that help you monitor and maintain your media storage. These checks identify potential issues with media files, helping you keep your Umbraco installation clean and efficient.
