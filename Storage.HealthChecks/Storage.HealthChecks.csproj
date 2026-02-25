@@ -7,7 +7,7 @@
     
     <!-- NuGet Package Metadata -->
     <PackageId>Storage.HealthChecks</PackageId>
-    <Version>1.2.1</Version>
+    <Version>1.2.2</Version>
     <Authors>Adolfi</Authors>
     <Company>Adolfi</Company>
     <Description>A collection of health checks for Umbraco CMS that help you monitor and maintain your media storage. Identifies duplicate files, large media, missing files, orphaned files, and unused media items.</Description>
@@ -17,7 +17,7 @@
     <RepositoryUrl>https://github.com/Adolfi/Storage.HealthChecks</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageIcon>https://github.com/Adolfi/Storage.HealthChecks/blob/main/images/package.png?raw=true</PackageIcon>
+    <PackageIcon>images/package.png</PackageIcon>
     
     <!-- Generera NuGet-paket vid build -->
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
