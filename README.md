@@ -129,9 +129,5 @@ You can configure an ignore list for the **Unused Media** and **Large Media** he
 | `DisallowedExtensionsScanMaxFiles` | `int` | Maximum number of files to scan for disallowed extensions before aborting (default: 50,000) |
 | `DisallowedExtensionsScanTimeBudgetSeconds` | `int` | Time budget in seconds for the disallowed extensions scan before aborting (default: 5) |
 
-## Localization
-
-Localization is currently not supported. All health check messages are displayed in **English only**.
-
 
 

@@ -4,6 +4,8 @@ using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.IO;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
+using Storage.HealthChecks.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -24,15 +26,18 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
     private readonly IMediaService _mediaService;
     private readonly MediaFileManager _mediaFileManager;
     private readonly ILogger<OrphanedMediaFilesHealthCheck> _logger;
+    private readonly ILocalizedTextService _localizedTextService;
 
     public OrphanedMediaFilesHealthCheck(
         IMediaService mediaService,
         MediaFileManager mediaFileManager,
-        ILogger<OrphanedMediaFilesHealthCheck> logger)
+        ILogger<OrphanedMediaFilesHealthCheck> logger,
+        ILocalizedTextService localizedTextService)
     {
         _mediaService = mediaService;
         _mediaFileManager = mediaFileManager;
         _logger = logger;
+        _localizedTextService = localizedTextService;
     }
 
     public override Task<IEnumerable<HealthCheckStatus>> GetStatusAsync()
@@ -43,7 +48,7 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus("No actions available. Please review and remove orphaned files manually via FTP/file manager.")
+        return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -65,7 +70,7 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
 
             if (orphanedFiles.Count == 0)
             {
-                return new HealthCheckStatus("No orphaned media files found. All physical files have database entries.")
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -83,7 +88,7 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during orphaned media files health check");
-            return new HealthCheckStatus($"Error checking orphaned media files: {ex.Message}")
+            return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -255,20 +260,21 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
 
         var totalSizeMB = Math.Round(totalSize / 1024.0 / 1024.0, 2);
 
-        sb.Append($"Found <strong>{orphanedFiles.Count}</strong> orphaned file{(orphanedFiles.Count == 1 ? "" : "s")} ");
-        sb.Append($"(<strong>{totalSizeMB} MB</strong> total).<br/><br/>");
+        sb.Append(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.summary",
+            new[] { orphanedFiles.Count.ToString(), totalSizeMB.ToString() }));
+        sb.Append("<br/><br/>");
 
         sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
-        sb.Append("<strong>Why does this happen?</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.whyHeader")}</strong><br/>");
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
-        sb.Append("<li>Media deleted but file removal failed (permissions/disk error)</li>");
-        sb.Append("<li>Database restored without matching media files</li>");
-        sb.Append("<li>Direct uploads bypassing Umbraco</li>");
-        sb.Append("<li>Failed or interrupted media operations</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.whyDeleted")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.whyRestore")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.whyDirect")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.whyFailed")}</li>");
         sb.Append("</ul>");
         sb.Append("</div>");
 
-        sb.Append("<strong>Orphaned files:</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.filesHeader")}</strong><br/>");
         sb.Append("<ul>");
 
         var filesToShow = orphanedFiles.Take(15).ToList();
@@ -283,10 +289,10 @@ public class OrphanedMediaFilesHealthCheck : HealthCheck
 
         if (orphanedFiles.Count > 15)
         {
-            sb.Append($"<em>...and {orphanedFiles.Count - 15} more orphaned files</em><br/><br/>");
+            sb.Append($"<em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.moreItems", new[] { (orphanedFiles.Count - 15).ToString() })}</em><br/><br/>");
         }
 
-        sb.Append("<br/><em>Review these files and remove them if they are no longer needed.</em>");
+        sb.Append($"<br/><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "orphanedMedia.recommendation")}</em>");
 
         return sb.ToString();
     }

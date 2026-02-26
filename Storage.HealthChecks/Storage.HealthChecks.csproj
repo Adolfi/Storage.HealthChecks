@@ -34,4 +34,12 @@
     <None Include="..\images\package.png" Pack="true" PackagePath="images\" />
   </ItemGroup>
 
+  <!-- Include language files in build output and NuGet package -->
+  <ItemGroup>
+    <Content Include="config/**"
+             CopyToOutputDirectory="Always"
+             Pack="true"
+             PackagePath="contentFiles/any/any/config" />
+  </ItemGroup>
+
 </Project>

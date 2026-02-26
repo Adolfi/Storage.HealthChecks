@@ -6,6 +6,8 @@ using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
+using Storage.HealthChecks.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -21,17 +23,20 @@ public class LargeMediaHealthCheck : HealthCheck
     private readonly IMediaService _mediaService;
     private readonly ILogger<LargeMediaHealthCheck> _logger;
     private readonly StorageHealthCheckConfiguration _settings;
+    private readonly ILocalizedTextService _localizedTextService;
     private readonly long _maxFileSizeBytes;
     private readonly double _maxFileSizeMB;
 
     public LargeMediaHealthCheck(
         IMediaService mediaService,
         ILogger<LargeMediaHealthCheck> logger,
-        IOptions<StorageHealthCheckConfiguration> settings)
+        IOptions<StorageHealthCheckConfiguration> settings,
+        ILocalizedTextService localizedTextService)
     {
         _mediaService = mediaService;
         _logger = logger;
         _settings = settings.Value;
+        _localizedTextService = localizedTextService;
         _maxFileSizeMB = _settings.LargeMediaThresholdMB > 0 ? _settings.LargeMediaThresholdMB : 5.0;
         _maxFileSizeBytes = (long)(_maxFileSizeMB * 1024 * 1024);
     }
@@ -44,7 +49,7 @@ public class LargeMediaHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus("No actions available. Please optimize large files manually.")
+        return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -58,7 +63,7 @@ public class LargeMediaHealthCheck : HealthCheck
 
             if (largeMedia.Count == 0)
             {
-                return new HealthCheckStatus($"No media files exceeding {_maxFileSizeMB} MB found.")
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.noIssues", new[] { _maxFileSizeMB.ToString() }))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -74,7 +79,7 @@ public class LargeMediaHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during large media health check");
-            return new HealthCheckStatus($"Error: {ex.Message}")
+            return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -155,8 +160,9 @@ public class LargeMediaHealthCheck : HealthCheck
         var sb = new StringBuilder();
         var totalExcessMB = Math.Round(totalExcessBytes / 1024.0 / 1024.0, 2);
 
-        sb.Append($"Found <strong>{largeMedia.Count}</strong> file{(largeMedia.Count == 1 ? "" : "s")} ");
-        sb.Append($"exceeding {_maxFileSizeMB} MB ({totalExcessMB} MB total excess).<br/><br/><ul>");
+        sb.Append(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.summary",
+            new[] { largeMedia.Count.ToString(), _maxFileSizeMB.ToString(), totalExcessMB.ToString() }));
+        sb.Append("<br/><br/><ul>");
 
         foreach (var file in largeMedia.Take(20))
         {
@@ -167,9 +173,9 @@ public class LargeMediaHealthCheck : HealthCheck
 
         sb.Append("</ul>");
         if (largeMedia.Count > 20)
-            sb.Append($"<em>...and {largeMedia.Count - 20} more</em><br/>");
+            sb.Append($"<em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.moreItems", new[] { (largeMedia.Count - 20).ToString() })}</em><br/>");
 
-        sb.Append($"<br/><em>Files exceeding {_maxFileSizeMB} MB should be optimized or compressed.</em>");
+        sb.Append($"<br/><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.recommendation", new[] { _maxFileSizeMB.ToString() })}</em>");
         return sb.ToString();
     }
 

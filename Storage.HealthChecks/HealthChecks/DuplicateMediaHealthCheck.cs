@@ -4,6 +4,8 @@ using Umbraco.Cms.Core;
 using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
+using Storage.HealthChecks.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -18,13 +20,16 @@ public class DuplicateMediaHealthCheck : HealthCheck
 
     private readonly IMediaService _mediaService;
     private readonly ILogger<DuplicateMediaHealthCheck> _logger;
+    private readonly ILocalizedTextService _localizedTextService;
 
     public DuplicateMediaHealthCheck(
         IMediaService mediaService,
-        ILogger<DuplicateMediaHealthCheck> logger)
+        ILogger<DuplicateMediaHealthCheck> logger,
+        ILocalizedTextService localizedTextService)
     {
         _mediaService = mediaService;
         _logger = logger;
+        _localizedTextService = localizedTextService;
     }
 
     public override Task<IEnumerable<HealthCheckStatus>> GetStatusAsync()
@@ -35,7 +40,7 @@ public class DuplicateMediaHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus("No actions available. Please review and remove duplicate files manually.")
+        return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -50,7 +55,7 @@ public class DuplicateMediaHealthCheck : HealthCheck
 
             if (duplicateGroups.Count == 0)
             {
-                return new HealthCheckStatus("No duplicate media files found.")
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -68,7 +73,7 @@ public class DuplicateMediaHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during duplicate media health check");
-            return new HealthCheckStatus($"Error: {ex.Message}")
+            return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -162,32 +167,36 @@ public class DuplicateMediaHealthCheck : HealthCheck
         var sb = new StringBuilder();
         var wastedMB = Math.Round(wastedBytes / 1024.0 / 1024.0, 2);
 
-        sb.Append($"Found <strong>{totalDuplicates}</strong> duplicate file{(totalDuplicates == 1 ? "" : "s")} ");
-        sb.Append($"in <strong>{groups.Count}</strong> group{(groups.Count == 1 ? "" : "s")} ");
-        sb.Append($"(<strong>{wastedMB} MB</strong> wasted).<br/><br/>");
+        sb.Append(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.summary",
+            new[] { totalDuplicates.ToString(), groups.Count.ToString(), wastedMB.ToString() }));
+        sb.Append("<br/><br/>");
 
         foreach (var group in groups.Take(5))
         {
             var groupWastedMB = Math.Round((group.SizeBytes * (group.Items.Count - 1)) / 1024.0 / 1024.0, 2);
-            sb.Append($"<strong>{group.FileName}</strong> ({group.Items.Count} copies, {groupWastedMB} MB wasted)<br/><ul>");
+            var groupHeader = _localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.groupHeader",
+                new[] { group.Items.Count.ToString(), groupWastedMB.ToString() });
+            sb.Append($"<strong>{group.FileName}</strong> ({groupHeader})<br/><ul>");
 
             foreach (var item in group.Items.Take(5))
             {
                 var link = $"/umbraco/section/media/workspace/media/edit/{item.Key}";
-                var label = item == group.Items.First() ? " (original)" : "";
+                var label = item == group.Items.First()
+                    ? $" {_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.original")}"
+                    : "";
                 sb.Append($"<li><a href=\"{link}\" target=\"_blank\">{item.Name}</a>{label}</li>");
             }
 
             if (group.Items.Count > 5)
-                sb.Append($"<li><em>...and {group.Items.Count - 5} more</em></li>");
+                sb.Append($"<li><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.moreItems", new[] { (group.Items.Count - 5).ToString() })}</em></li>");
 
             sb.Append("</ul>");
         }
 
         if (groups.Count > 5)
-            sb.Append($"<em>...and {groups.Count - 5} more duplicate groups</em><br/>");
+            sb.Append($"<em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.moreGroups", new[] { (groups.Count - 5).ToString() })}</em><br/>");
 
-        sb.Append("<br/><em>Review duplicates and consider consolidating to save space.</em>");
+        sb.Append($"<br/><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.recommendation")}</em>");
         return sb.ToString();
     }
 
