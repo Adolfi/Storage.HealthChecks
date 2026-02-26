@@ -8,6 +8,7 @@ using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.IO;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Extensions;
+using Storage.HealthChecks.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -61,7 +62,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.noActions"))
+        return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -75,7 +76,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
             if (_disallowedExtensions.Count == 0)
             {
-                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.noConfig"))
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.noConfig"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -89,7 +90,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
             if (result.TotalViolations == 0)
             {
-                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.noIssues"))
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -104,7 +105,7 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during disallowed media extensions health check");
-            return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.error", new[] { ex.Message }))
+            return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -182,29 +183,29 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
 
         if (result.Aborted)
         {
-            var abortReason = _localizedTextService.Localize("storageHealthChecks", result.AbortReasonKey, result.AbortReasonTokens);
-            sb.Append(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.summaryAborted",
+            var abortReason = _localizedTextService.LocalizeWithFallback("storageHealthChecks", result.AbortReasonKey, result.AbortReasonTokens);
+            sb.Append(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.summaryAborted",
                 new[] { result.TotalViolations.ToString(), abortReason }));
         }
         else
         {
-            sb.Append(_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.summary",
+            sb.Append(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.summary",
                 new[] { result.TotalViolations.ToString() }));
         }
 
         sb.Append("<br/><br/>");
 
         sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
-        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyHeader")}</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.whyHeader")}</strong><br/>");
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyOldConfig")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyFtp")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyCustom")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.whyMigration")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.whyOldConfig")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.whyFtp")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.whyCustom")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.whyMigration")}</li>");
         sb.Append("</ul>");
         sb.Append("</div>");
 
-        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.filesHeader")}</strong><br/><ul>");
+        sb.Append($"<strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.filesHeader")}</strong><br/><ul>");
 
         foreach (var filePath in result.ViolatingPaths)
         {
@@ -217,9 +218,9 @@ public class DisallowedMediaExtensionsHealthCheck : HealthCheck
         sb.Append("</ul>");
 
         if (result.TotalViolations > MaxExamplePaths)
-            sb.Append($"<em>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.moreItems", new[] { (result.TotalViolations - MaxExamplePaths).ToString() })}</em><br/>");
+            sb.Append($"<em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.moreItems", new[] { (result.TotalViolations - MaxExamplePaths).ToString() })}</em><br/>");
 
-        sb.Append($"<br/><em>{_localizedTextService.Localize("storageHealthChecks", "disallowedExtensions.recommendation")}</em>");
+        sb.Append($"<br/><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "disallowedExtensions.recommendation")}</em>");
 
         return sb.ToString();
     }

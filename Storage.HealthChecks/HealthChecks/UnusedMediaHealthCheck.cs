@@ -7,6 +7,7 @@ using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Extensions;
+using Storage.HealthChecks.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -46,7 +47,7 @@ public class UnusedMediaHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "unusedMedia.noActions"))
+        return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -57,7 +58,7 @@ public class UnusedMediaHealthCheck : HealthCheck
         if (_trackedReferencesService is null)
         {
             return new HealthCheckStatus(
-                _localizedTextService.Localize("storageHealthChecks", "unusedMedia.serviceUnavailable"))
+                _localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.serviceUnavailable"))
             {
                 ResultType = StatusResultType.Error
             };
@@ -90,7 +91,7 @@ public class UnusedMediaHealthCheck : HealthCheck
 
             if (unusedMediaItems.Count == 0)
             {
-                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "unusedMedia.noIssues"))
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -105,7 +106,7 @@ public class UnusedMediaHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during unused media health check");
-            return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "unusedMedia.error", new[] { ex.Message }))
+            return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -179,21 +180,21 @@ public class UnusedMediaHealthCheck : HealthCheck
         var totalBytes = unusedItems.Sum(x => x.SizeBytes);
         var totalMB = Math.Round(totalBytes / 1024.0 / 1024.0, 2);
 
-        sb.Append(_localizedTextService.Localize("storageHealthChecks", "unusedMedia.summary",
+        sb.Append(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.summary",
             new[] { unusedItems.Count.ToString(), totalMB.ToString() }));
         sb.Append("<br/><br/>");
 
         sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
-        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyHeader")}</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.whyHeader")}</strong><br/>");
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyNoRef")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyNoDocProp")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyHardcoded")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.whyExternal")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.whyNoRef")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.whyNoDocProp")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.whyHardcoded")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.whyExternal")}</li>");
         sb.Append("</ul>");
         sb.Append("</div>");
 
-        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.itemsHeader")}</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.itemsHeader")}</strong><br/>");
         sb.Append("<ul>");
 
         var itemsToShow = unusedItems.Take(15).ToList();
@@ -208,10 +209,10 @@ public class UnusedMediaHealthCheck : HealthCheck
 
         if (unusedItems.Count > 15)
         {
-            sb.Append($"<em>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.moreItems", new[] { (unusedItems.Count - 15).ToString() })}</em><br/><br/>");
+            sb.Append($"<em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.moreItems", new[] { (unusedItems.Count - 15).ToString() })}</em><br/><br/>");
         }
 
-        sb.Append($"<br/><em>{_localizedTextService.Localize("storageHealthChecks", "unusedMedia.recommendation")}</em>");
+        sb.Append($"<br/><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "unusedMedia.recommendation")}</em>");
 
         return sb.ToString();
     }

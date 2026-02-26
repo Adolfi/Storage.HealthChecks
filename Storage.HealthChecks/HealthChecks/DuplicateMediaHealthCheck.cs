@@ -5,6 +5,7 @@ using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Extensions;
+using Storage.HealthChecks.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -39,7 +40,7 @@ public class DuplicateMediaHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "duplicateMedia.noActions"))
+        return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -54,7 +55,7 @@ public class DuplicateMediaHealthCheck : HealthCheck
 
             if (duplicateGroups.Count == 0)
             {
-                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "duplicateMedia.noIssues"))
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -72,7 +73,7 @@ public class DuplicateMediaHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during duplicate media health check");
-            return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "duplicateMedia.error", new[] { ex.Message }))
+            return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -166,14 +167,14 @@ public class DuplicateMediaHealthCheck : HealthCheck
         var sb = new StringBuilder();
         var wastedMB = Math.Round(wastedBytes / 1024.0 / 1024.0, 2);
 
-        sb.Append(_localizedTextService.Localize("storageHealthChecks", "duplicateMedia.summary",
+        sb.Append(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.summary",
             new[] { totalDuplicates.ToString(), groups.Count.ToString(), wastedMB.ToString() }));
         sb.Append("<br/><br/>");
 
         foreach (var group in groups.Take(5))
         {
             var groupWastedMB = Math.Round((group.SizeBytes * (group.Items.Count - 1)) / 1024.0 / 1024.0, 2);
-            var groupHeader = _localizedTextService.Localize("storageHealthChecks", "duplicateMedia.groupHeader",
+            var groupHeader = _localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.groupHeader",
                 new[] { group.Items.Count.ToString(), groupWastedMB.ToString() });
             sb.Append($"<strong>{group.FileName}</strong> ({groupHeader})<br/><ul>");
 
@@ -181,21 +182,21 @@ public class DuplicateMediaHealthCheck : HealthCheck
             {
                 var link = $"/umbraco/section/media/workspace/media/edit/{item.Key}";
                 var label = item == group.Items.First()
-                    ? $" {_localizedTextService.Localize("storageHealthChecks", "duplicateMedia.original")}"
+                    ? $" {_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.original")}"
                     : "";
                 sb.Append($"<li><a href=\"{link}\" target=\"_blank\">{item.Name}</a>{label}</li>");
             }
 
             if (group.Items.Count > 5)
-                sb.Append($"<li><em>{_localizedTextService.Localize("storageHealthChecks", "duplicateMedia.moreItems", new[] { (group.Items.Count - 5).ToString() })}</em></li>");
+                sb.Append($"<li><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.moreItems", new[] { (group.Items.Count - 5).ToString() })}</em></li>");
 
             sb.Append("</ul>");
         }
 
         if (groups.Count > 5)
-            sb.Append($"<em>{_localizedTextService.Localize("storageHealthChecks", "duplicateMedia.moreGroups", new[] { (groups.Count - 5).ToString() })}</em><br/>");
+            sb.Append($"<em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.moreGroups", new[] { (groups.Count - 5).ToString() })}</em><br/>");
 
-        sb.Append($"<br/><em>{_localizedTextService.Localize("storageHealthChecks", "duplicateMedia.recommendation")}</em>");
+        sb.Append($"<br/><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "duplicateMedia.recommendation")}</em>");
         return sb.ToString();
     }
 

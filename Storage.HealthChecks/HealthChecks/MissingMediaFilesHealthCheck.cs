@@ -6,6 +6,7 @@ using Umbraco.Cms.Core.IO;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Extensions;
+using Storage.HealthChecks.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -43,7 +44,7 @@ public class MissingMediaFilesHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "missingMedia.noActions"))
+        return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -57,7 +58,7 @@ public class MissingMediaFilesHealthCheck : HealthCheck
 
             if (missingFiles.Count == 0)
             {
-                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "missingMedia.noIssues"))
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.noIssues"))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -72,7 +73,7 @@ public class MissingMediaFilesHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during missing media files health check");
-            return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "missingMedia.error", new[] { ex.Message }))
+            return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -151,25 +152,25 @@ public class MissingMediaFilesHealthCheck : HealthCheck
     {
         var sb = new StringBuilder();
 
-        sb.Append($"<strong style=\"color: #d32f2f;\">⚠️ {_localizedTextService.Localize("storageHealthChecks", "missingMedia.summary", new[] { missingFiles.Count.ToString() })}</strong><br/><br/>");
+        sb.Append($"<strong style=\"color: #d32f2f;\">⚠️ {_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.summary", new[] { missingFiles.Count.ToString() })}</strong><br/><br/>");
 
         sb.Append("<div style=\"background-color: #f5f5f5; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px;\">");
-        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyHeader")}</strong><br/>");
+        sb.Append($"<strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.whyHeader")}</strong><br/>");
         sb.Append("<ul style=\"margin: 8px 0 0 0;\">");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyMigration")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyDisk")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyManual")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyDeployment")}</li>");
-        sb.Append($"<li>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.whyCloud")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.whyMigration")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.whyDisk")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.whyManual")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.whyDeployment")}</li>");
+        sb.Append($"<li>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.whyCloud")}</li>");
         sb.Append("</ul>");
         sb.Append("</div>");
 
-        sb.Append($"<strong>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.filesHeader")}</strong><br/><ul>");
+        sb.Append($"<strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.filesHeader")}</strong><br/><ul>");
 
         foreach (var file in missingFiles.Take(15))
         {
             var link = $"/umbraco/section/media/workspace/media/edit/{file.Key}";
-            var itemLabel = _localizedTextService.Localize("storageHealthChecks", "missingMedia.itemLine",
+            var itemLabel = _localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.itemLine",
                 new[] { $"<code>{file.ExpectedPath}</code>" });
             sb.Append($"<li><a href=\"{link}\" target=\"_blank\"><strong>{file.Name}</strong></a> ");
             sb.Append($"<em>({itemLabel})</em></li>");
@@ -178,9 +179,9 @@ public class MissingMediaFilesHealthCheck : HealthCheck
         sb.Append("</ul>");
 
         if (missingFiles.Count > 15)
-            sb.Append($"<em>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.moreItems", new[] { (missingFiles.Count - 15).ToString() })}</em><br/>");
+            sb.Append($"<em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.moreItems", new[] { (missingFiles.Count - 15).ToString() })}</em><br/>");
 
-        sb.Append($"<br/><strong>{_localizedTextService.Localize("storageHealthChecks", "missingMedia.actionRequired")}</strong>");
+        sb.Append($"<br/><strong>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "missingMedia.actionRequired")}</strong>");
         return sb.ToString();
     }
 

@@ -7,6 +7,7 @@ using Umbraco.Cms.Core.HealthChecks;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Extensions;
+using Storage.HealthChecks.Extensions;
 
 namespace Storage.HealthChecks.HealthChecks;
 
@@ -48,7 +49,7 @@ public class LargeMediaHealthCheck : HealthCheck
 
     public override HealthCheckStatus ExecuteAction(HealthCheckAction action)
     {
-        return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "largeMedia.noActions"))
+        return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.noActions"))
         {
             ResultType = StatusResultType.Info
         };
@@ -62,7 +63,7 @@ public class LargeMediaHealthCheck : HealthCheck
 
             if (largeMedia.Count == 0)
             {
-                return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "largeMedia.noIssues", new[] { _maxFileSizeMB.ToString() }))
+                return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.noIssues", new[] { _maxFileSizeMB.ToString() }))
                 {
                     ResultType = StatusResultType.Success
                 };
@@ -78,7 +79,7 @@ public class LargeMediaHealthCheck : HealthCheck
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during large media health check");
-            return new HealthCheckStatus(_localizedTextService.Localize("storageHealthChecks", "largeMedia.error", new[] { ex.Message }))
+            return new HealthCheckStatus(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.error", new[] { ex.Message }))
             {
                 ResultType = StatusResultType.Error
             };
@@ -159,7 +160,7 @@ public class LargeMediaHealthCheck : HealthCheck
         var sb = new StringBuilder();
         var totalExcessMB = Math.Round(totalExcessBytes / 1024.0 / 1024.0, 2);
 
-        sb.Append(_localizedTextService.Localize("storageHealthChecks", "largeMedia.summary",
+        sb.Append(_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.summary",
             new[] { largeMedia.Count.ToString(), _maxFileSizeMB.ToString(), totalExcessMB.ToString() }));
         sb.Append("<br/><br/><ul>");
 
@@ -172,9 +173,9 @@ public class LargeMediaHealthCheck : HealthCheck
 
         sb.Append("</ul>");
         if (largeMedia.Count > 20)
-            sb.Append($"<em>{_localizedTextService.Localize("storageHealthChecks", "largeMedia.moreItems", new[] { (largeMedia.Count - 20).ToString() })}</em><br/>");
+            sb.Append($"<em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.moreItems", new[] { (largeMedia.Count - 20).ToString() })}</em><br/>");
 
-        sb.Append($"<br/><em>{_localizedTextService.Localize("storageHealthChecks", "largeMedia.recommendation", new[] { _maxFileSizeMB.ToString() })}</em>");
+        sb.Append($"<br/><em>{_localizedTextService.LocalizeWithFallback("storageHealthChecks", "largeMedia.recommendation", new[] { _maxFileSizeMB.ToString() })}</em>");
         return sb.ToString();
     }
 
