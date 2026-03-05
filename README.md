@@ -1,4 +1,4 @@
-![Package Icon](/images/package.png)
+![Package Icon](https://raw.githubusercontent.com/Adolfi/Storage.HealthChecks/main/images/package.png)
 
 # Storage Health Checks for Umbraco
 
