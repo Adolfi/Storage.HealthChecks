@@ -88,6 +88,17 @@ Identifies media items that have no tracked references from any Umbraco content.
 
 ---
 
+### Empty Media Folders
+Identifies media folders in the Media section that contain no children. Empty folders do not serve any purpose and can clutter the Media section.
+
+**Status:** Info  
+**What it checks:**
+- Scans all media items for folders
+- Identifies folders with no child items
+- Lists empty folders with direct links to review them in the backoffice
+
+---
+
 ### Disallowed Media File Extensions
 Detects physical media files whose extensions are listed in Umbraco's `DisallowedUploadedFileExtensions` setting. These files may pose a security risk and should be reviewed.
 
