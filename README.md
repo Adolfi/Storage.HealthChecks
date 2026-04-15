@@ -102,6 +102,20 @@ Detects physical media files whose extensions are listed in Umbraco's `Disallowe
 
 ---
 
+### Empty Media Folders
+Finds media folders that contain no child items (neither files nor subfolders). These empty folders can clutter your media library and should be reviewed.
+
+**Status:** Info
+**What it checks:**
+- Scans all media folders in the media library
+- Identifies folders with no children (empty folders)
+- Lists folders that can be safely removed
+- Common causes: content moved or deleted, folders created but never used
+
+[See example](https://github.com/Adolfi/Storage.HealthChecks/blob/main/Storage.HealthChecks/Demo/empty-folders.png?raw=true)
+
+---
+
 ## Configuration
 
 ### Ignore Lists
